@@ -22,6 +22,7 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
   const [inputMessage, setInputMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [backendStatus, setBackendStatus] = useState<'checking' | 'online' | 'offline'>('checking')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -31,6 +32,27 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Check backend status on component mount
+  useEffect(() => {
+    const checkBackendStatus = async () => {
+      try {
+        const response = await fetch('/api/health', { 
+          method: 'GET',
+          signal: AbortSignal.timeout(3000) // 3 second timeout
+        })
+        if (response.ok) {
+          setBackendStatus('online')
+        } else {
+          setBackendStatus('offline')
+        }
+      } catch (err) {
+        setBackendStatus('offline')
+      }
+    }
+    
+    checkBackendStatus()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -69,7 +91,13 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
       })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        if (response.status === 500) {
+          throw new Error('Backend server error. Please make sure the FastAPI backend is running on port 8000.')
+        } else if (response.status === 404) {
+          throw new Error('API endpoint not found. Please check if the backend is running correctly.')
+        } else {
+          throw new Error(`Server error (${response.status}). Please try again or check if the backend is running.`)
+        }
       }
 
       const reader = response.body?.getReader()
@@ -108,7 +136,15 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
 
     } catch (err) {
       console.error('Error:', err)
-      setError(err instanceof Error ? err.message : 'An error occurred while chatting')
+      if (err instanceof Error) {
+        if (err.message.includes('ECONNREFUSED') || err.message.includes('Failed to fetch')) {
+          setError('Cannot connect to backend server. Please make sure the FastAPI backend is running on port 8000.')
+        } else {
+          setError(err.message)
+        }
+      } else {
+        setError('An unexpected error occurred. Please try again.')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -123,7 +159,22 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
     <div className="card h-[calc(100vh-12rem)] flex flex-col">
       {/* Chat Header */}
       <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">Chat with AI</h2>
+        <div className="flex items-center space-x-3">
+          <h2 className="text-lg font-semibold text-gray-900">Chat with AI</h2>
+          <div className="flex items-center space-x-1">
+            <div className={`w-2 h-2 rounded-full ${
+              backendStatus === 'online' ? 'bg-green-500' : 
+              backendStatus === 'offline' ? 'bg-red-500' : 'bg-yellow-500'
+            }`}></div>
+            <span className={`text-xs ${
+              backendStatus === 'online' ? 'text-green-600' : 
+              backendStatus === 'offline' ? 'text-red-600' : 'text-yellow-600'
+            }`}>
+              {backendStatus === 'online' ? 'Backend Online' : 
+               backendStatus === 'offline' ? 'Backend Offline' : 'Checking...'}
+            </span>
+          </div>
+        </div>
         <button
           onClick={clearChat}
           className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
@@ -145,6 +196,7 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
           <div className="text-center text-gray-500 py-8">
             <p>Start a conversation with the AI assistant!</p>
             <p className="text-sm mt-2">Make sure to set your API key in the settings.</p>
+            <p className="text-sm mt-1">💡 <strong>Tip:</strong> The backend needs to be running for chat to work. Start it with: <code className="bg-gray-100 px-1 rounded">cd ../api && python app.py</code></p>
           </div>
         ) : (
           messages.map((message) => (
@@ -163,16 +215,16 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Type your message..."
+            placeholder={backendStatus === 'offline' ? 'Backend offline - cannot send messages' : 'Type your message...'}
             className="input-field flex-1"
-            disabled={isLoading || !apiKey.trim()}
+            disabled={isLoading || !apiKey.trim() || backendStatus === 'offline'}
           />
           <button
             type="submit"
-            disabled={isLoading || !inputMessage.trim() || !apiKey.trim()}
+            disabled={isLoading || !inputMessage.trim() || !apiKey.trim() || backendStatus === 'offline'}
             className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Sending...' : 'Send'}
+            {isLoading ? 'Sending...' : backendStatus === 'offline' ? 'Backend Offline' : 'Send'}
           </button>
         </div>
       </form>
