@@ -24,7 +24,7 @@ export default function SettingsPanel({
   ]
 
   return (
-    <div className="card h-full flex flex-col p-6">
+    <div className="card h-full flex flex-col">
       <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900">Settings</h3>
         <button
@@ -37,7 +37,7 @@ export default function SettingsPanel({
         </button>
       </div>
 
-      <div className="flex-1 space-y-4 overflow-y-auto">
+      <div className="flex-1 space-y-4 overflow-y-auto p-6">
         {/* API Key */}
         <div>
           <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700 mb-2">
@@ -49,7 +49,7 @@ export default function SettingsPanel({
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="sk-..."
-            className="input-field"
+            className="input-field text-sm"
           />
           <p className="mt-1 text-xs text-gray-500">
             Your API key is stored locally and never sent to our servers.
@@ -65,7 +65,7 @@ export default function SettingsPanel({
             id="model"
             value={model}
             onChange={(e) => setModel(e.target.value)}
-            className="input-field"
+            className="input-field text-sm"
           >
             {models.map((modelOption) => (
               <option key={modelOption.value} value={modelOption.value}>
