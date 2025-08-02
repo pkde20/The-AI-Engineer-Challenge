@@ -75,6 +75,8 @@ export default function SettingsPanel({
               </option>
             ))}
           </select>
+        </div>
+
         {/* Developer Message */}
         <div className="space-y-2">
           <label htmlFor="developerMessage" className="block text-sm font-semibold text-gray-900">
