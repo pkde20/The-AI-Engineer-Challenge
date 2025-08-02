@@ -24,12 +24,13 @@ export default function SettingsPanel({
   ]
 
   return (
-    <div className="card h-full flex flex-col">
-      <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-full flex flex-col">
+      {/* Header */}
+      <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
         <h3 className="text-lg font-semibold text-gray-900">Settings</h3>
         <button
           onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 transition-colors"
+          className="p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all duration-200"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -37,11 +38,12 @@ export default function SettingsPanel({
         </button>
       </div>
 
-      <div className="flex-1 space-y-4 overflow-y-auto p-6">
+      {/* Content */}
+      <div className="p-6 space-y-6">
         {/* API Key */}
-        <div>
-          <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700 mb-2">
-            OpenAI API Key
+        <div className="space-y-2">
+          <label htmlFor="apiKey" className="block text-sm font-semibold text-gray-900">
+            Set OpenAI API Key
           </label>
           <input
             id="apiKey"
@@ -49,23 +51,23 @@ export default function SettingsPanel({
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="sk-..."
-            className="input-field text-sm"
+            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm"
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="text-xs text-gray-500">
             Your API key is stored locally and never sent to our servers.
           </p>
         </div>
 
         {/* Model Selection */}
-        <div>
-          <label htmlFor="model" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-2">
+          <label htmlFor="model" className="block text-sm font-semibold text-gray-900">
             Model
           </label>
           <select
             id="model"
             value={model}
             onChange={(e) => setModel(e.target.value)}
-            className="input-field text-sm"
+            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm bg-white"
           >
             {models.map((modelOption) => (
               <option key={modelOption.value} value={modelOption.value}>
@@ -75,36 +77,27 @@ export default function SettingsPanel({
           </select>
         </div>
 
-        {/* Help Section */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="text-sm font-medium text-blue-900 mb-2">Getting Started</h4>
-          <ul className="text-xs text-blue-800 space-y-1">
-            <li>• Enter OpenAI API key</li>
-            <li>• Customize the system message to define AI behavior</li>
-            <li>• Start chatting!</li>
-          </ul>
-        </div>
+
 
         {/* Developer Message */}
-        <div>
-          <label htmlFor="developerMessage" className="block text-sm font-medium text-gray-700 mb-2">
-            System Message
+        <div className="space-y-2">
+          <label htmlFor="developerMessage" className="block text-sm font-semibold text-gray-900">
+            Provide System Message
           </label>
           <textarea
             id="developerMessage"
             value={developerMessage}
             onChange={(e) => setDeveloperMessage(e.target.value)}
             placeholder="Enter the system message that defines the AI's behavior..."
-            rows={2}
-            className="input-field resize-none text-sm"
+            rows={3}
+            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm resize-none"
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="text-xs text-gray-500">
             This message defines how the AI assistant should behave and respond.
           </p>
         </div>
         
-        {/* Bottom spacing */}
-        <div className="h-4"></div>
+        </div>
       </div>
     </div>
   )
