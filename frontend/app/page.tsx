@@ -33,19 +33,21 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
           {/* Settings Panel */}
           {isSettingsOpen && (
             <div className="lg:col-span-1">
-              <SettingsPanel
-                apiKey={apiKey}
-                setApiKey={setApiKey}
-                developerMessage={developerMessage}
-                setDeveloperMessage={setDeveloperMessage}
-                model={model}
-                setModel={setModel}
-                onClose={() => setIsSettingsOpen(false)}
-              />
+              <div className="h-[calc(100vh-12rem)]">
+                <SettingsPanel
+                  apiKey={apiKey}
+                  setApiKey={setApiKey}
+                  developerMessage={developerMessage}
+                  setDeveloperMessage={setDeveloperMessage}
+                  model={model}
+                  setModel={setModel}
+                  onClose={() => setIsSettingsOpen(false)}
+                />
+              </div>
             </div>
           )}
 

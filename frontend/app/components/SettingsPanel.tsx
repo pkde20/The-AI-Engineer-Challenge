@@ -24,7 +24,7 @@ export default function SettingsPanel({
   ]
 
   return (
-    <div className="card">
+    <div className="card h-full flex flex-col">
       <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900">Settings</h3>
         <button
@@ -37,7 +37,7 @@ export default function SettingsPanel({
         </button>
       </div>
 
-      <div className="space-y-6">
+      <div className="flex-1 space-y-6 overflow-y-auto">
         {/* API Key */}
         <div>
           <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700 mb-2">
