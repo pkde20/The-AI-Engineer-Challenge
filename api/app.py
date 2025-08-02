@@ -30,6 +30,16 @@ class ChatRequest(BaseModel):
     model: Optional[str] = "gpt-4.1-mini"  # Optional model selection with default
     api_key: str          # OpenAI API key for authentication
 
+# Root endpoint
+@app.get("/")
+async def root():
+    return {"message": "AI Engineer Challenge API", "status": "running"}
+
+# Define a health check endpoint to verify API status
+@app.get("/health")
+async def health_check():
+    return {"status": "ok", "message": "API is healthy"}
+
 # Define the main chat endpoint that handles POST requests
 @app.post("/api/chat")
 async def chat(request: ChatRequest):
@@ -60,11 +70,6 @@ async def chat(request: ChatRequest):
     except Exception as e:
         # Handle any errors that occur during processing
         raise HTTPException(status_code=500, detail=str(e))
-
-# Define a health check endpoint to verify API status
-@app.get("/api/health")
-async def health_check():
-    return {"status": "ok"}
 
 # Entry point for running the application directly
 if __name__ == "__main__":
