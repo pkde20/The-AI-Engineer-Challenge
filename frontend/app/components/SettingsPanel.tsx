@@ -24,7 +24,7 @@ export default function SettingsPanel({
   ]
 
   return (
-    <div className="card h-full flex flex-col">
+    <div className="card h-full flex flex-col p-6">
       <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900">Settings</h3>
         <button
@@ -37,7 +37,7 @@ export default function SettingsPanel({
         </button>
       </div>
 
-      <div className="flex-1 space-y-6 overflow-y-auto">
+      <div className="flex-1 space-y-4 overflow-y-auto">
         {/* API Key */}
         <div>
           <label htmlFor="apiKey" className="block text-sm font-medium text-gray-700 mb-2">
@@ -75,6 +75,16 @@ export default function SettingsPanel({
           </select>
         </div>
 
+        {/* Help Section */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h4 className="text-sm font-medium text-blue-900 mb-2">Getting Started</h4>
+          <ul className="text-xs text-blue-800 space-y-1">
+            <li>• Enter OpenAI API key</li>
+            <li>• Customize the system message to define AI behavior</li>
+            <li>• Start chatting!</li>
+          </ul>
+        </div>
+
         {/* Developer Message */}
         <div>
           <label htmlFor="developerMessage" className="block text-sm font-medium text-gray-700 mb-2">
@@ -85,24 +95,16 @@ export default function SettingsPanel({
             value={developerMessage}
             onChange={(e) => setDeveloperMessage(e.target.value)}
             placeholder="Enter the system message that defines the AI's behavior..."
-            rows={4}
-            className="input-field resize-none"
+            rows={2}
+            className="input-field resize-none text-sm"
           />
           <p className="mt-1 text-xs text-gray-500">
             This message defines how the AI assistant should behave and respond.
           </p>
         </div>
-
-        {/* Help Section */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="text-sm font-medium text-blue-900 mb-2">Getting Started</h4>
-          <ul className="text-xs text-blue-800 space-y-1">
-            <li>• Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="underline">OpenAI Platform</a></li>
-            <li>• Enter your API key above</li>
-            <li>• Customize the system message to define AI behavior</li>
-            <li>• Start chatting!</li>
-          </ul>
-        </div>
+        
+        {/* Bottom spacing */}
+        <div className="h-4"></div>
       </div>
     </div>
   )
