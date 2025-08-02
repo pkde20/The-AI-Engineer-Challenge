@@ -25,6 +25,9 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
   const [backendStatus, setBackendStatus] = useState<'checking' | 'online' | 'offline'>('checking')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  // Get the backend URL from environment variable or fallback to localhost
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -37,7 +40,7 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
   useEffect(() => {
     const checkBackendStatus = async () => {
       try {
-        const response = await fetch('/api/health', { 
+        const response = await fetch(`${backendUrl}/health`, { 
           method: 'GET',
           signal: AbortSignal.timeout(3000) // 3 second timeout
         })
@@ -52,7 +55,7 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
     }
     
     checkBackendStatus()
-  }, [])
+  }, [backendUrl])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -77,7 +80,7 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
     setError(null)
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch(`${backendUrl}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,7 +95,7 @@ export default function ChatInterface({ apiKey, developerMessage, model }: ChatI
 
       if (!response.ok) {
         if (response.status === 500) {
-          throw new Error('Backend server error. Please make sure the FastAPI backend is running on port 8000.')
+          throw new Error('Backend server error. Please make sure the FastAPI backend is running.')
         } else if (response.status === 404) {
           throw new Error('API endpoint not found. Please check if the backend is running correctly.')
         } else {
