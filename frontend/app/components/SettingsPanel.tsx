@@ -75,10 +75,6 @@ export default function SettingsPanel({
               </option>
             ))}
           </select>
-        </div>
-
-
-
         {/* Developer Message */}
         <div className="space-y-2">
           <label htmlFor="developerMessage" className="block text-sm font-semibold text-gray-900">
@@ -95,8 +91,6 @@ export default function SettingsPanel({
           <p className="text-xs text-gray-500">
             This message defines how the AI assistant should behave and respond.
           </p>
-        </div>
-        
         </div>
       </div>
     </div>
